@@ -1,17 +1,15 @@
 from django import forms
 
-from recipes.models import Recipe
+from recipes.models import Recipe, Category, Ingredient
 
 
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'cooking-time', 'image', 'category', 'description', 'ingredients']
+        fields = ['title', 'cooking_time', 'image', 'category', 'description']
         widgets = {
             'category': forms.CheckboxSelectMultiple(attrs={'class': 'form-control'}),
-            'ingredients': forms.CheckboxSelectMultiple(attrs={'class': 'form-control'}),
         }
         labels = {
             'category' : 'Выберите категорию',
-            'ingredients' : 'Выберите ингридиенты'
         }
