@@ -1,34 +1,15 @@
-{% load static %}
- 
-{% block extra_css %}
-    <link href="{% static 'css/recipe_creating.css' %}" rel="stylesheet">
-{% endblock %}
+<form action="/create-recipe" method="post">
+    <label for="image">Изображение рецепта</label>
+    <input type="image" id="image" name="Изображение" alt="Изображение рецепта">
 
-{% block content %}
-<form action="/create-recipe" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <label for="title">Введите название рецепта</label>
+    <input type="text" id="title" name="Название рецепта">
 
-    <div class="form-group">
-        <label for="id_image">Изображение рецепта</label>
-        <input type="file" id="id_image" name="image" accept="image/*">
-    </div>
+    <label for="time">Введите время приготовления рецепта</label>
+    <input type="number" id="time" name="Время приготовления">
 
-    <div class="form-group">
-        <label for="id_title">Введите название рецепта</label>
-        <input type="text" id="id_title" name="title" required>
-    </div>
+    <label for="desc">Подготовьте описание рецепту</label>
+    <input type="text" id="desc" name="Описание рецепта">
 
-    <div class="form-group">
-        <label for="id_cooking_time">Введите время приготовления (в минутах)</label>
-        <input type="number" id="id_cooking_time" name="cooking_time" min="1" required>
-    </div>
-
-    <div class="form-group">
-        <label for="id_description">Описание рецепта</label>
-        <textarea id="id_description" name="description" rows="4" placeholder="Расскажите, как готовить..."></textarea>
-    </div>
-
-    <button type="submit" class="btn-submit">Сохранить рецепт</button>
+    <input type="submit" value="Сохранить рецепт">
 </form>
-
-{% endblock %}
