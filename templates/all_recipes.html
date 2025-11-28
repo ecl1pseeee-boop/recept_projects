@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все рецепты</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Все рецепты</h1>
+
+        <div class="row">
+            {% for recipe in recipes %}
+                {% include "includes/recipe_card_teaser.html" with recipe=recipe %}
+            {% empty %}
+            <div class="col-12">
+                <p>Рецептов пока нет</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
