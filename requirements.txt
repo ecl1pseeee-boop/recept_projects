@@ -1,3 +1,5 @@
 django
 python-dotenv
 mysql-connector-python
+Pillow
+gunicorn
