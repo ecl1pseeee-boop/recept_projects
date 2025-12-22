@@ -80,3 +80,8 @@ mysql/
 html/
 *.sql
 *.dump
+
+
+
+tech.md
+/mydatabase

@@ -28,7 +28,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "false") == "true"
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '80.87.103.221', 'vm-bc15cb10.na4u.ru']
 
@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps.recipes"
+    "apps.users",
+    "apps.recipes",
+    "apps.categories",
+    "apps.ingredients",
+    "apps.favorites"
 ]
 
 MIDDLEWARE = [
@@ -146,6 +150,9 @@ STATIC_ROOT= "/app/staticfiles"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

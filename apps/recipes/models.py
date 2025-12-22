@@ -2,20 +2,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 
-# Модель категории
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
-
-    # Получение строкового представления категории
-    def __str__(self):
-        return self.name
+from apps.categories.models import Category
 
 
-# Модель рецепта
 class Recipe(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
@@ -24,14 +13,14 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="recipe_images/",  blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    description = models.TextField(blank=True, null=True, verbose_name="Описание рецепты")
+    description = models.TextField(blank=True, null=True, verbose_name="Описание рецепта")
 
     class Meta:
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
         ordering = ['-created_at']
 
-    # Сохранение модели
+
     def save(self, *args, **kwargs):
         if not self.slug:
             main_slug = slugify(self.title) # основа
@@ -45,19 +34,3 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
-
-
-# Модель ингридиента
-class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="ingredients")
-    image = models.ImageField(upload_to="ingredient_images/", blank=True, null=True)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
-    measurement = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name = "Ингредиент"
-        verbose_name_plural = "Ингредиенты"
-
-    def __str__(self):
-        return f"{self.name}: {self.quantity} {self.measurement}"

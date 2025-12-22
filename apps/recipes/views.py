@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from recipes.models import Recipe
+from .models import Recipe
 
 
 def home(request: HttpRequest):

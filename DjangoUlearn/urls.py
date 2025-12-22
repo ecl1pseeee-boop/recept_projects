@@ -17,8 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
-from recipes import views
+from apps.recipes import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,3 +28,8 @@ urlpatterns = [
     path('all-recipes/', views.receipt_list, name='recipe_list'),
     path('create-recipe/', views.create_recipe, name='create_recipe'),
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
