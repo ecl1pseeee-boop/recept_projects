@@ -1,6 +1,6 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from DjangoUlearn import settings
 from apps.ingredients.models import Ingredient
 
 
@@ -30,7 +30,7 @@ class Recipe(models.Model):
     servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Порции")
     difficulty = models.CharField(null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Уровень сложности")
     instructions = models.TextField(blank=True, null=True, verbose_name="Инструкции")
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор", null=True, blank=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор", null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 

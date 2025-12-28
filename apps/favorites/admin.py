@@ -1,4 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.favorites.models import UserFavorite
 
+admin.site.register(UserFavorite)

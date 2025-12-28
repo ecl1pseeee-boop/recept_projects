@@ -1,5 +1,5 @@
+from django.contrib.auth.models import User
 from django.db import models
-from DjangoUlearn import settings
 from apps.recipes.models import Recipe
 
 
@@ -10,7 +10,7 @@ class UserFavorite(models.Model):
         related_name='favorited_by'
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         related_name='favorites'
     )

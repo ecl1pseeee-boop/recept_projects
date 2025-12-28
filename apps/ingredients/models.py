@@ -1,5 +1,5 @@
+from django.contrib.auth.models import User
 from django.db import models
-from DjangoUlearn import settings
 
 
 class Ingredient(models.Model):
@@ -14,7 +14,7 @@ class Ingredient(models.Model):
         return f"{self.name}"
 
 class UserIngredient(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pantry")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pantry")
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='in_pantry_of')
     quantity = models.FloatField(help_text="Количество (например, 500)")
     unit = models.CharField(max_length=50, help_text="Единица измерения (г, мл, шт и т.д.)")

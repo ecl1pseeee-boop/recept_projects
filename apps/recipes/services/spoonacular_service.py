@@ -1,9 +1,11 @@
+import os
+
 import requests
 from django.contrib.auth.models import User
 
 from recepts.apps.recipes.models import Recipe
 
-API_KEY = "e431dca8ec7d433b81a4edeec835ed66"
+API_KEY = os.getenv("API_KEY")
 BASE_URL = "https://api.spoonacular.com"
 
 

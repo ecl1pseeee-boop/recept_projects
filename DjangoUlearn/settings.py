@@ -34,10 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '80.87.103.221', 'vm-bc15cb10.na4u.ru']
 
-# TODO: Изменить пользователя на Profile правильно!
-AUTH_USER_MODEL = "users.User"
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "apps.users",
     "apps.recipes",
-    "apps.categories",
     "apps.ingredients",
     "apps.favorites"
 ]
