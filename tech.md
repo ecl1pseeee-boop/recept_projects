@@ -98,19 +98,19 @@
     - Стратегия кеширования
 ### Архитектура
 #### Схема Базы Данных
-**Users**
+**Users** 
 - id, email, username, password, created_at, updated_at
-**Recipes**
+**Recipes** 
 - id, title, description, image, source (spoonacular/user), external_id, cooking_time, prep_time, servings, difficulty, instructions, created_at, updated_at, user_id
-**Categories**
+**Categories** +
 - id, name, slug
-**Recipe_Categories** (Many-to-Many)
+**Recipe_Categories** (Many-to-Many) 
 - recipe_id, category_id
-**Ingredients**
-- id, name, normalized_name
-**Recipe_Ingredients**
-- id, recipe_id, ingredient_id, quantity, unit
-**User_Favorites**
+**Ingredients** 
+- id, name, image
+**Recipe_Ingredients** 
+- id, recipe_id, ingredient_id, quantity, unit, description
+**User_Favorites** 
 - id, user_id, recipe_id, created_at
 **User_Ingredients** (Холодильник)
 - id, user_id, ingredient_id, quantity, unit, added_at
