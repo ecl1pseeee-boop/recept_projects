@@ -101,7 +101,7 @@
 **Users**
 - id, email, username, password, created_at, updated_at
 **Recipes**
-- id, title, description, image_url, source (spoonacular/user), external_id, cooking_time, prep_time, servings, difficulty, instructions, created_at, updated_at, user_id
+- id, title, description, image, source (spoonacular/user), external_id, cooking_time, prep_time, servings, difficulty, instructions, created_at, updated_at, user_id
 **Categories**
 - id, name, slug
 **Recipe_Categories** (Many-to-Many)
