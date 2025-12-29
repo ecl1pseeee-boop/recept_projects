@@ -192,7 +192,7 @@ class Command(BaseCommand):
             defaults={
                 'title': title,
                 'description': self.clean_html(recipe.get("summary", "")),
-                'image_url': recipe.get("image", "").strip(),
+                'image_external_url': recipe.get("image", "").strip(),
                 'cooking_time': cooking_time,
                 'prep_time': recipe.get("preparationMinutes"),
                 'servings': servings,

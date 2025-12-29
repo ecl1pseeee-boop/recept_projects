@@ -1,34 +1,50 @@
 {% load static %}
 
 {% block extra_css %}
-    <link href="{% static 'css/recipe_card_teaser.css' %}" rel="stylesheet">
+    <link href="{% static 'css/recipes/recipe_card_teaser.css' %}" rel="stylesheet">
 {% endblock %}
 
-<div class="col-md-4 mb-4">
-    <div class="card recipe-card h-100">
-        {% if recipe.image %}
-        <img src="{{ recipe.image_url.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+<div class="recipe-teaser">
+    <div>
+        <!-- изображение остаётся без изменений -->
+        {% if recipe.image_url %}
+            {% if recipe.image_url.url %}
+                <img src="{{ recipe.image_url.url }}" alt="{{ recipe.title }}" loading="lazy">
+            {% else %}
+                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" loading="lazy">
+            {% endif %}
         {% else %}
-        <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="No image" style="height: 200px; object-fit: cover;">
+            <img src="{% static 'images/recipe-default.jpg' %}" alt="recipe image" loading="lazy">
         {% endif %}
 
-        <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ recipe.title }}</h5>
-            <p class="card-text">
-                <small class="text-muted">
-                    🕐 {{ recipe.cooking_time }} мин. |
-                    👨‍🍳 {{ recipe.author.username }}
-                </small>
-            </p>
-            <p class="card-text flex-grow-1">{{ recipe.description|truncatewords:15 }}</p>
+        <!-- Бейдж сложности -->
+        <span>{{ recipe.get_difficulty_display }}</span>
 
-            <div class="mb-2">
-                {% for category in recipe.categories.all %}
-                <span class="badge bg-secondary">{{ category.name }}</span>
-                {% endfor %}
-            </div>
+        <!-- Время приготовления -->
+        <div><span>{{ recipe.cooking_time }} minutes</span></div>
+    </div>
 
-            <a href="" class="btn btn-outline-primary mt-auto">Смотреть весь рецепт</a>
+    <div class="recipe-teaser-content">
+        <h3><a href="">{{ recipe.title|truncatechars:40 }}</a></h3>
+
+        <div class="recipe-teaser-meta">
+            <div><i></i> <span>{{ recipe.author.username }}</span></div>
+            <div><span>{{ recipe.created_at|date:"d.m.Y" }}</span></div>
+        </div>
+
+        <p class="recipe-teaser-description">{{ recipe.description|striptags|truncatechars:120 }}</p>
+
+        <div class="recipe-teaser-categories">
+            {% for category in recipe.categories.all|slice:":3" %}
+                <a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a>
+            {% endfor %}
+            {% if recipe.categories.count > 3 %}
+                <span>+{{ recipe.categories.count|add:"-3" }}</span>
+            {% endif %}
+        </div>
+
+        <div class="recipe-teaser-link">
+            <a href="">View recipe</a>
         </div>
     </div>
 </div>
