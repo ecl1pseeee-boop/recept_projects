@@ -1,29 +1,22 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All recipes</title>
-</head>
-<body>
-    {% load static %}
-
-    {% block extra_css %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>All Recipes</title>
+        {% load static %}
         <link href="{% static 'css/recipes/all_recipes.css' %}" rel="stylesheet">
-    {% endblock %}
-    <div class="container">
-        <a href="javascript:history.back()" class="back-button">← Go back</a>
-        <h1>All recipes</h1>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    </head>
+    <body>
+        <div class="container">
+            <a href="javascript:history.back()" class="back-button">← Go back</a>
+            <h1>All Recipes</h1>
+            {% include "includes/recipe_filters.html" %}
 
-        <div class="row">
-            {% for recipe in recipes %}
-                {% include "includes/recipe_card_teaser.html" with recipe=recipe %}
-            {% empty %}
-            <div class="col-12">
-                <p>No recipes yet</p>
+            <div id="recipe-list">
+                {% include "includes/all_recipe_blocks.html" %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-</body>
+    </body>
 </html>
