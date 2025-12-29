@@ -106,7 +106,7 @@
 - id, name, slug
 **Recipe_Categories** (Many-to-Many) 
 - recipe_id, category_id
-**Ingredients** 
+**h** 
 - id, name, image
 **Recipe_Ingredients** 
 - id, recipe_id, ingredient_id, quantity, unit, description

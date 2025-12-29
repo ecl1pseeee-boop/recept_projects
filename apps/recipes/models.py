@@ -5,7 +5,7 @@ from apps.ingredients.models import Ingredient
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Название")
+    name = models.CharField(max_length=100, verbose_name="Название", unique=True)
     slug = models.SlugField()
 
     class Meta:
@@ -30,13 +30,13 @@ class Recipe(models.Model):
     servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Порции")
     difficulty = models.CharField(null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Уровень сложности")
     instructions = models.TextField(blank=True, null=True, verbose_name="Инструкции")
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор", null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор", null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     # API spoonacular/user
     source = models.CharField(max_length=100, blank=True, null=True, verbose_name="Источник")
-    external_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="Внешний ID")
+    external_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="Внешний ID", unique=True)
 
     class Meta:
         verbose_name = "Рецепт"
@@ -59,6 +59,7 @@ class RecipeIngredient(models.Model):
     )
 
     class Meta:
+        unique_together = ('recipe', 'ingredient')
         verbose_name = "Ингридиент в рецепте"
         verbose_name_plural = "Ингридиенты в рецепте"
 

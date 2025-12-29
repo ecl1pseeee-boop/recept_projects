@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from django.db import transaction
 
 from apps.ingredients.models import Ingredient
-from recepts.apps.recipes.models import Recipe, Category, RecipeCategory, RecipeIngredient
+from apps.recipes.models import Recipe, Category, RecipeCategory, RecipeIngredient
 
 API_KEY = os.getenv("API_KEY")
 SPOONACULAR_URL = os.getenv("SPOONACULAR_URL")
