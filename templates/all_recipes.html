@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Все рецепты</title>
+    <title>All recipes</title>
 </head>
 <body>
     {% load static %}
@@ -12,15 +12,15 @@
         <link href="{% static 'css/recipes/all_recipes.css' %}" rel="stylesheet">
     {% endblock %}
     <div class="container">
-        <a href="javascript:history.back()" class="back-button">← Вернуться назад</a>
-        <h1>Все рецепты</h1>
+        <a href="javascript:history.back()" class="back-button">← Go back</a>
+        <h1>All recipes</h1>
 
         <div class="row">
             {% for recipe in recipes %}
                 {% include "includes/recipe_card_teaser.html" with recipe=recipe %}
             {% empty %}
             <div class="col-12">
-                <p>Рецептов пока нет</p>
+                <p>No recipes yet</p>
             </div>
             {% endfor %}
         </div>
