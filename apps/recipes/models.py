@@ -22,21 +22,21 @@ class Recipe(models.Model):
         ('hard', 'Сложный')
     ]
 
-    title = models.CharField(max_length=100, verbose_name="Название")
-    description = models.TextField(blank=True, null=True, verbose_name="Описание рецепта")
-    image_url = models.URLField(max_length=500, blank=True, null=True, verbose_name="Ссылка на изображение")
-    cooking_time = models.PositiveIntegerField(help_text="Время приготовления в минутах", verbose_name="Время готовки")
-    prep_time = models.PositiveIntegerField(blank=True, null=True, verbose_name="Время подготовки")
-    servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Порции")
-    difficulty = models.CharField(null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Уровень сложности")
-    instructions = models.TextField(blank=True, null=True, verbose_name="Инструкции")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор", null=True, blank=True)
-    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    title = models.CharField(max_length=100, verbose_name="Title")
+    description = models.TextField(blank=True, null=True, verbose_name="Recipe Description")
+    image_url = models.URLField(max_length=500, blank=True, null=True, verbose_name="Image URL")
+    cooking_time = models.PositiveIntegerField(help_text="Cooking time in minutes", verbose_name="Cooking time")
+    prep_time = models.PositiveIntegerField(blank=True, null=True, verbose_name="Preparation time in minutes")
+    servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Servings")
+    difficulty = models.CharField(null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Difficulty level")
+    instructions = models.TextField(blank=True, null=True, verbose_name="Instructions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Recipe Autor", null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Creation time")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Update time")
 
     # API spoonacular/user
-    source = models.CharField(max_length=100, blank=True, null=True, verbose_name="Источник")
-    external_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="Внешний ID", unique=True)
+    source = models.CharField(max_length=100, blank=True, null=True, verbose_name="Source")
+    external_id = models.CharField(max_length=50, blank=True, null=True, verbose_name="External ID", unique=True)
 
     class Meta:
         verbose_name = "Рецепт"
@@ -45,7 +45,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
-
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

@@ -1,0 +1,209 @@
+{% extends "index.html" %}
+{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block content %}
+    <div class="mx-auto max-w-6xl px-4 py-6">
+        <div class="flex flex-col gap-6">
+            <!-- Breadcrumb / back -->
+            <div class="flex items-center justify-between gap-3">
+                <a href="{% url 'recipe_list' %}{% if request.GET.next %}?{{ request.GET.next }}{% endif %}"
+                   class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                  ← Back to recipes
+                </a>
+
+                <!-- Dropdown actions (Alpine) -->
+                <div class="relative" x-data="{ open:false }">
+                    <button
+                        type="button"
+                        class="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900"
+                        @click="open = !open"
+                        @keydown.escape.window="open = false"
+                        > Actions
+                    <span class="text-xs opacity-70">▾</span>
+                    </button>
+
+                    <div
+                        x-show="open"
+                        x-transition
+                        @click.outside="open=false"
+                        class="absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg p-1"
+                        >
+                        <a class="block rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900"
+                           href="#"
+                           @click.prevent="$dispatch('open-share')">
+                          Share…
+                        </a>
+                        <a class="block rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900"
+                           href="{% url 'recipe_list' %}">
+                          All recipes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top card -->
+            <section class="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <!-- Image -->
+              <div class="bg-gray-100 dark:bg-gray-900">
+                {% if recipe.image_url %}
+                  <img src="{{ recipe.image_url }}"
+                       alt="{{ recipe.title }}"
+                       class="h-full w-full object-cover"
+                       loading="lazy">
+                {% else %}
+                  <div class="h-72 md:h-full flex items-center justify-center text-gray-500">
+                    No photo
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Summary -->
+              <div class="p-5 md:p-7 flex flex-col gap-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <!-- categories chips -->
+                  {% for rc in recipe.recipecategory_set.all %}
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs
+                                 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+                      {{ rc.category.name }}
+                    </span>
+                  {% endfor %}
+                </div>
+
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight">
+                  {{ recipe.title }}
+                </h1>
+
+                {% if recipe.description %}
+                  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {{ recipe.description }}
+                  </p>
+                {% endif %}
+
+                <!-- Meta pills -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                    <div class="text-xs text-gray-500">Cooking time</div>
+                    <div class="text-lg font-semibold">{{ recipe.cooking_time }} min</div>
+                  </div>
+                  <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                    <div class="text-xs text-gray-500">Servings</div>
+                    <div class="text-lg font-semibold">{{ recipe.servings|default:"—" }}</div>
+                  </div>
+                  <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                    <div class="text-xs text-gray-500">Difficulty</div>
+                    <div class="text-lg font-semibold">{{ recipe.get_difficulty_display|default:"—" }}</div>
+                  </div>
+                  <div class="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                    <div class="text-xs text-gray-500">Source</div>
+                    <div class="text-lg font-semibold">{{ recipe.source|default:"—" }}</div>
+                  </div>
+                </div>
+
+                <!-- Mini CTA -->
+                <div class="flex flex-wrap gap-2 pt-2">
+                  <button class="rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+                          @click="$dispatch('open-share')">
+                    Share
+                  </button>
+
+                  <a class="rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900"
+                     href="#ingredients">
+                    Jump to ingredients
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+            <!-- Main content layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Left: ingredients -->
+                <section id="ingredients"
+              class="lg:col-span-1 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm">
+              <div class="p-5 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                <h2 class="text-lg font-semibold">Ingredients</h2>
+
+                <!-- Alpine state example -->
+                <div x-data="{ compact: false }" class="flex items-center gap-2">
+                  <span class="text-xs text-gray-500">Compact</span>
+                  <button
+                    type="button"
+                    class="rounded-lg border border-gray-200 dark:border-gray-800 px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-gray-900"
+                    @click="compact = !compact"
+                  >
+                    Toggle
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-5">
+                <ul class="space-y-2">
+                  {% for ri in recipe.recipeingredient_set.all %}
+                    <li class="flex items-start justify-between gap-3 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
+                      <div class="min-w-0">
+                        <div class="font-medium">{{ ri.ingredient.name }}</div>
+                        {% if ri.description %}
+                          <div class="text-sm text-gray-600 dark:text-gray-300">{{ ri.description }}</div>
+                        {% endif %}
+                      </div>
+                      <div class="shrink-0 text-sm font-semibold">
+                        {{ ri.quantity }} {{ ri.unit }}
+                      </div>
+                    </li>
+                  {% empty %}
+                    <li class="text-sm text-gray-500">No ingredients yet.</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </section>
+
+            <!-- Right: instructions -->
+                <section class="lg:col-span-2 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm">
+                  <div class="p-5 border-b border-gray-200 dark:border-gray-800">
+                    <h2 class="text-lg font-semibold">Instructions</h2>
+                  </div>
+
+                  <div class="p-5 prose dark:prose-invert max-w-none">
+                    {{ recipe.instructions|default:"No instructions provided."|linebreaks }}
+                  </div>
+                </section>
+            </div>
+
+            <!-- Share modal (Alpine) -->
+            <div
+              x-data="{ open:false }"
+              @open-share.window="open=true"
+              x-show="open"
+              x-transition.opacity
+              class="fixed inset-0 z-50 flex items-center justify-center p-4"
+              style="display:none"
+            >
+                <div class="absolute inset-0 bg-black/50" @click="open=false"></div>
+                <div class="relative w-full max-w-md rounded-2xl bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-xl p-5">
+                    <div class="flex items-start justify-between">
+                      <h3 class="text-lg font-semibold">Share recipe</h3>
+                      <button class="rounded-lg px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-900" @click="open=false">✕</button>
+                    </div>
+
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                      Copy link to this recipe:
+                    </p>
+
+                    <div class="mt-3 flex gap-2"
+                         x-data="{ link: window.location.href }">
+                      <input class="flex-1 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-2 text-sm"
+                             type="text"
+                             x-model="link"
+                             readonly>
+                      <button class="rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-3 py-2 text-sm"
+                              @click="navigator.clipboard.writeText(link)">
+                        Copy
+                      </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

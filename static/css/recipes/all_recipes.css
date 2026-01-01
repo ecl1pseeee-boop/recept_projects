@@ -38,7 +38,7 @@ body {
 
 /* Page title */
 h1 {
-    font-size: 2rem;
+    font-size: 45px;
     font-weight: 800;
     color: #111827;
     margin-bottom: 2rem;
@@ -63,7 +63,7 @@ h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* === Стили для recipe_teaser.html === */
+/* === Стили для recipe_card.html === */
 /* Эти стили должны соответствовать содержимому include-файла */
 
 .recipe-teaser {

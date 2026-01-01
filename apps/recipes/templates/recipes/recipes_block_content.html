@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+
+{% block head %}
+    {% load static %}
+    <link href="{% static 'css/recipes/all_recipes.css' %}" rel="stylesheet">
+    <script defer src="{% static 'js/recipes/recipe_filters.js' %}"></script>
+
+    <style>
+        .htmx-indicator { display: none; }
+        .htmx-request .htmx-indicator { display: inline-flex; }
+    </style>
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+            <h1 class="text-5xl font-bold">All Recipes</h1>
+            <a href="{% url 'home' %}" class="back-button">← Back to recipes</a>
+            {% include "recipes/recipes_page.html" %}
+        </div>
+{% endblock %}

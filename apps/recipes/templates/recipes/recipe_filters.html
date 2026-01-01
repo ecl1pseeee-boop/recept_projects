@@ -1,21 +1,40 @@
-<div class="filters-section mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-    <h3 class="text-lg font-semibold mb-3">Filter Recipes</h3>
-    <form
-      id="recipe-filters"
-      hx-get="/recipes/"
-      hx-target="#recipes-page"
-      hx-push-url="true"
-      hx-trigger="
+<div class="mb-6">
+  <button
+    type="button"
+    class="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition"
+    onclick="toggleFilters()"
+    aria-controls="filters-panel"
+    aria-expanded="false"
+    id="filters-toggle"
+  >
+    <span class="text-lg font-semibold">Filters</span>
+    <svg id="filters-chevron" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+    </svg>
+  </button>
+
+  <div
+    id="filters-panel"
+    class="mt-3 overflow-hidden max-h-0 opacity-0 transition-all duration-300"
+  >
+    <div class="filters-section p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+      <h3 class="text-lg font-semibold mb-3">Filter Recipes</h3>
+
+      <form
+        id="recipe-filters"
+        hx-get="/recipes/"
+        hx-target="#recipes-page"
+        hx-push-url="true"
+        hx-trigger="
           keyup delay:300ms from:#search-filter,
           change from:select,
           change from:input[type=radio],
           change from:input[type=checkbox],
           change from:input[type=number],
           reset
-      "
-    >
-
-        <!-- Search filter -->
+        "
+      >
+           <!-- Search filter -->
         <div class="mb-4">
             <label class="block text-sm font-medium mb-1" for="search-filter">Search</label>
             <input
@@ -203,6 +222,22 @@
             </div>
         </div>
 
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Sort</label>
+          <select
+            name="sort"
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            <option value="" {% if not request.GET.sort %}selected{% endif %}>Default</option>
+            <option value="new" {% if request.GET.sort == "new" %}selected{% endif %}>Newest</option>
+            <option value="old" {% if request.GET.sort == "old" %}selected{% endif %}>Oldest</option>
+            <option value="time_asc" {% if request.GET.sort == "time_asc" %}selected{% endif %}>Cooking time (asc)</option>
+            <option value="time_desc" {% if request.GET.sort == "time_desc" %}selected{% endif %}>Cooking time (desc)</option>
+            <option value="title_asc" {% if request.GET.sort == "title_asc" %}selected{% endif %}>Title (A–Z)</option>
+            <option value="title_desc" {% if request.GET.sort == "title_desc" %}selected{% endif %}>Title (Z–A)</option>
+          </select>
+        </div>
+
         <!-- Reset filters -->
         <div>
             <a href="/recipes/"
@@ -210,5 +245,7 @@
                 Clear all filters
             </a>
         </div>
-    </form>
+      </form>
+    </div>
+  </div>
 </div>

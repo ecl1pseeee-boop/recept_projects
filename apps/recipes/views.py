@@ -1,20 +1,15 @@
 from datetime import timedelta
-
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import ListView, TemplateView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.db.models import Q
 from .forms import RecipeForm, RecipeFilterForm
 from .models import Recipe, Category, RecipeCategory
 
-
-class HomeView(TemplateView):
-    template_name = "recipes/index.html"
-
 class RecipeListView(ListView):
     model = Recipe
     context_object_name = "recipes"
-    template_name = "recipes/recipe_list.html"
+    template_name = "recipes/recipes_block_content.html"
     partial_template_name = "recipes/recipes_page.html"
 
     def get_filter_form(self) -> RecipeFilterForm:
@@ -77,6 +72,21 @@ class RecipeListView(ListView):
         if difficulty:
             qs = qs.filter(difficulty=difficulty)
 
+        sort = cd.get("sort") or ""
+
+        if sort == "new":
+            qs = qs.order_by("-created_at")
+        elif sort == "old":
+            qs = qs.order_by("created_at")
+        elif sort == "time_asc":
+            qs = qs.order_by("cooking_time", "-created_at")
+        elif sort == "time_desc":
+            qs = qs.order_by("-cooking_time", "-created_at")
+        elif sort == "title_asc":
+            qs = qs.order_by("title")
+        elif sort == "title_desc":
+            qs = qs.order_by("-title")
+
         return qs
 
     def get_context_data(self, **kwargs):
@@ -101,10 +111,36 @@ class RecipeListView(ListView):
             self.template_name = self.partial_template_name
         return super().render_to_response(context, **response_kwargs)
 
-
 class RecipeCreateView(CreateView):
     model = Recipe
     form_class = RecipeForm
-    template_name = "recipes/recipe_create.html"
+    template_name = "recipes/recipe/recipe_create.html"
     success_url = reverse_lazy("recipe_list")
+
+    def form_valid(self, form):
+        recipe = form.save(commit=False)
+        recipe.user = self.request.user
+        recipe.source = "user"
+        recipe.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("recipe_detail", kwargs={"pk": self.object.pk})
+
+class RecipeDetailView(DetailView):
+    model = Recipe
+    template_name = "recipes/recipe/recipe_detail.html"
+    context_object_name = "recipe"
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .select_related("user")
+            .prefetch_related(
+                "recipecategory_set__category",
+                "recipeingredient_set__ingredient",
+            )
+        )
+
 

@@ -1,8 +1,7 @@
-<div id="recipes-page">
-    {% include "recipes/recipe_filters.html" %}
-    <div id="recipe-list">
-        {% include "recipes/recipe/recipe_blocks.html" %}
-    </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+  {% for recipe in recipes %}
+    {% include "recipes/recipe/recipe_card.html" %}
+  {% endfor %}
 </div>
 
 {% if page_obj.has_next %}

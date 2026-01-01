@@ -1,0 +1,15 @@
+<a href="{% url 'recipe_detail' recipe.pk %}"
+   class="block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm overflow-hidden hover:shadow-md transition">
+  <div class="h-40 bg-gray-100 dark:bg-gray-900">
+    {% if recipe.image_url %}
+      <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="h-full w-full object-cover" loading="lazy">
+    {% endif %}
+  </div>
+  <div class="p-4">
+    <div class="text-sm text-gray-500">{{ recipe.cooking_time }} min • {{ recipe.get_difficulty_display|default:"—" }}</div>
+    <div class="mt-1 font-semibold">{{ recipe.title }}</div>
+    {% if recipe.description %}
+      <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{{ recipe.description }}</p>
+    {% endif %}
+  </div>
+</a>
