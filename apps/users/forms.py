@@ -30,9 +30,19 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 
-                 'password1', 'password2']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                "class": "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 "
+                         "bg-white dark:bg-gray-700 text-gray-900 dark:text-white "
+                         "focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            })
 
     def save(self, commit = True):
         user = super().save(commit = False)
@@ -42,12 +52,10 @@ class UserRegistrationForm(UserCreationForm):
         if commit:
             user.save()
             avatar = self.cleaned_data.get('avatar')
-            Profile.objects.create(
-                user=user,
-                avatar=avatar if avatar else None
-            )
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.avatar = avatar if avatar else None
+            profile.save()
         return user
-
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField(
@@ -64,7 +72,6 @@ class UserUpdateForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
-
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
