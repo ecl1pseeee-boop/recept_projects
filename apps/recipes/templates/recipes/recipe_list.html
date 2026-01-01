@@ -7,16 +7,19 @@
         {% load static %}
         <link href="{% static 'css/recipes/all_recipes.css' %}" rel="stylesheet">
         <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+            }
+    </script>
     </head>
     <body>
         <div class="container">
-            <a href="javascript:history.back()" class="back-button">← Go back</a>
-            <h1>All Recipes</h1>
-            {% include "includes/recipe_filters.html" %}
+            <a href="{% url 'home' %}" class="back-button">← Back to recipes</a>
 
-            <div id="recipe-list">
-                {% include "includes/all_recipe_blocks.html" %}
-            </div>
+            <h1>All Recipes</h1>
+            {% include "recipes/recipes_page.html" %}
         </div>
     </body>
 </html>
