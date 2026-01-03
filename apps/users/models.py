@@ -19,6 +19,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    # Обрабатываем случай, если Profile уже существует
     if hasattr(instance, 'profile'):
         instance.profile.save()

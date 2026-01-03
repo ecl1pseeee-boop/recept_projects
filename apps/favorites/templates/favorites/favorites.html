@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-6">
+
+  <!-- Page title -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+      Favorite Recipes
+    </h1>
+    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      Recipes you’ve saved for later ❤️
+    </p>
+  </div>
+
+  {% if recipes %}
+    <!-- Recipes grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for recipe in recipes %}
+        {% include "recipes/recipe/recipe_card.html" with recipe=recipe %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty state -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-10 text-center">
+      <div class="text-5xl mb-4">💔</div>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        No favorite recipes yet
+      </h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">
+        Save recipes you love and they’ll appear here.
+      </p>
+
+      <a
+        href="{% url 'recipe_list' %}"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+               bg-indigo-600 text-white font-medium
+               hover:bg-indigo-700 transition"
+      >
+        Browse Recipes
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from apps.recipes.models import Recipe
 
-
 class UserFavorite(models.Model):
     recipe = models.ForeignKey(
         Recipe,
@@ -17,9 +16,12 @@ class UserFavorite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'recipe')
         verbose_name = "Избранные"
         verbose_name_plural = "Избранные"
+        constraints = [
+            models.UniqueConstraint(fields=["user", "recipe"], name="uniq_user_recipe_favorite")
+        ]
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f'{self.user.username} - {self.recipe.title}'

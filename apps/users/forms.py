@@ -58,15 +58,9 @@ class UserRegistrationForm(UserCreationForm):
         return user
 
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField(
-        required=True,
-        label='Email',
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
-    )
-
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'first_name', 'last_name']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),

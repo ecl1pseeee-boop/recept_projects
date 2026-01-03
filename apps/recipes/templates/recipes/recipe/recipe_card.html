@@ -1,15 +1,67 @@
-<a href="{% url 'recipe_detail' recipe.pk %}"
-   class="block rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm overflow-hidden hover:shadow-md transition">
-  <div class="h-40 bg-gray-100 dark:bg-gray-900">
-    {% if recipe.image_url %}
-      <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="h-full w-full object-cover" loading="lazy">
-    {% endif %}
-  </div>
-  <div class="p-4">
-    <div class="text-sm text-gray-500">{{ recipe.cooking_time }} min • {{ recipe.get_difficulty_display|default:"—" }}</div>
-    <div class="mt-1 font-semibold">{{ recipe.title }}</div>
-    {% if recipe.description %}
-      <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{{ recipe.description }}</p>
-    {% endif %}
-  </div>
-</a>
+<div class="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-sm overflow-hidden hover:shadow-md transition">
+
+  <!-- Favorite button (separate from link) -->
+  <form method="post"
+        action="{% url 'toggle_favorite' recipe.id %}"
+        class="absolute top-3 right-3 z-10">
+    {% csrf_token %}
+
+    <button
+      type="submit"
+      class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium
+             bg-white/90 dark:bg-gray-900/80 backdrop-blur
+             border border-gray-200 dark:border-gray-700
+             hover:bg-white dark:hover:bg-gray-900 transition"
+      aria-label="Toggle favorite"
+    >
+      {% if recipe.id in favorite_ids %}
+        <span class="text-amber-500">★</span>
+        <span class="text-gray-800 dark:text-gray-200">В избранном</span>
+      {% else %}
+        <span class="text-gray-500">☆</span>
+        <span class="text-gray-800 dark:text-gray-200">В избранное</span>
+      {% endif %}
+    </button>
+  </form>
+
+  <!-- Card link -->
+  <a href="{% url 'recipe_detail' recipe.pk %}" class="block">
+
+    <!-- Image -->
+    <div class="relative h-44 bg-gray-100 dark:bg-gray-900 overflow-hidden">
+      {% if recipe.image_url %}
+        <img
+          src="{{ recipe.image_url }}"
+          alt="{{ recipe.title }}"
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="h-full w-full flex items-center justify-center text-gray-400 dark:text-gray-500">
+          No photo
+        </div>
+      {% endif %}
+
+      <!-- subtle gradient for readability -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-4">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        {{ recipe.cooking_time|default:"—" }} min • {{ recipe.get_difficulty_display|default:"—" }}
+      </div>
+
+      <div class="mt-1 text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">
+        {{ recipe.title }}
+      </div>
+
+      {% if recipe.description %}
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+          {{ recipe.description }}
+        </p>
+      {% endif %}
+    </div>
+
+  </a>
+</div>

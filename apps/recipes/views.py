@@ -1,10 +1,12 @@
 from datetime import timedelta
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, DetailView
 from django.db.models import Q
 from .forms import RecipeForm, RecipeFilterForm
-from .models import Recipe, Category, RecipeCategory
+from .models import Recipe, Category
 
 class RecipeListView(ListView):
     model = Recipe
@@ -15,7 +17,7 @@ class RecipeListView(ListView):
     def get_filter_form(self) -> RecipeFilterForm:
         return RecipeFilterForm(self.request.GET)
 
-
+    # TODO: Вынести фильтрацию
     def get_queryset(self):
         qs = super().get_queryset()
         form = self.get_filter_form()
@@ -111,7 +113,7 @@ class RecipeListView(ListView):
             self.template_name = self.partial_template_name
         return super().render_to_response(context, **response_kwargs)
 
-class RecipeCreateView(CreateView):
+class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     form_class = RecipeForm
     template_name = "recipes/recipe/recipe_create.html"
@@ -143,4 +145,14 @@ class RecipeDetailView(DetailView):
             )
         )
 
+class UserRecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = "recipes/user_recipes.html"
+    context_object_name = "recipes"
+
+    def get_queryset(self):
+        return (super()
+              .get_queryset()
+              .select_related("user")
+              .filter(user=self.request.user))
 
