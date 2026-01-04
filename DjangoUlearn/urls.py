@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('apps.users.urls')),
     path('', include('apps.recipes.urls')),
     path('', include('apps.favorites.urls')),
+    path('', include('apps.ingredients.urls')),
 ]
 
 if settings.DEBUG:

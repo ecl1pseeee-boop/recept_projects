@@ -1,0 +1,21 @@
+<form method="post"
+      action="{% url 'toggle_favorite' recipe.id %}">
+  {% csrf_token %}
+
+    <button
+      type="submit"
+      class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium
+             bg-white/90 dark:bg-gray-900/80 backdrop-blur
+             border border-gray-200 dark:border-gray-700
+             hover:bg-white dark:hover:bg-gray-900 transition"
+      aria-label="Toggle favorite"
+    >
+    {% if recipe.id in favorite_ids %}
+      <span class="text-amber-500">★</span>
+      <span class="text-gray-800 dark:text-gray-200">В избранном</span>
+    {% else %}
+      <span class="text-gray-500">☆</span>
+      <span class="text-gray-800 dark:text-gray-200">В избранное</span>
+    {% endif %}
+  </button>
+</form>

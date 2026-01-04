@@ -1,12 +1,50 @@
 from datetime import timedelta
-
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.db.models import Q
-from .forms import RecipeForm, RecipeFilterForm
+from .forms import RecipeForm, RecipeFilterForm, RecipeUpdateForm, RecipeIngredientFormSet
 from .models import Recipe, Category
+
+
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe
+    form_class = RecipeForm
+    template_name = "recipes/recipe/recipe_create.html"
+    success_url = reverse_lazy("recipe_list")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.source = "user"
+        self.object.save()
+
+        form.instance = self.object
+        form.save(commit=True)
+
+        ingredients_formset = RecipeIngredientFormSet(
+            self.request.POST, instance=self.object, prefix="ingredients"
+        )
+
+        if ingredients_formset.is_valid():
+            ingredients_formset.save()
+            return redirect(self.get_success_url())
+
+        return self.render_to_response(self.get_context_data(form=form, ingredients_formset=ingredients_formset))
+
+    def get_success_url(self):
+        return reverse("recipe_detail", kwargs={"pk": self.object.pk})
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        if self.request.method == "POST":
+            context["ingredients_formset"] = RecipeIngredientFormSet(self.request.POST, prefix="ingredients")
+        else:
+            context["ingredients_formset"] = RecipeIngredientFormSet(prefix="ingredients")
+        return context
 
 class RecipeListView(ListView):
     model = Recipe
@@ -113,22 +151,6 @@ class RecipeListView(ListView):
             self.template_name = self.partial_template_name
         return super().render_to_response(context, **response_kwargs)
 
-class RecipeCreateView(LoginRequiredMixin, CreateView):
-    model = Recipe
-    form_class = RecipeForm
-    template_name = "recipes/recipe/recipe_create.html"
-    success_url = reverse_lazy("recipe_list")
-
-    def form_valid(self, form):
-        recipe = form.save(commit=False)
-        recipe.user = self.request.user
-        recipe.source = "user"
-        recipe.save()
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("recipe_detail", kwargs={"pk": self.object.pk})
-
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = "recipes/recipe/recipe_detail.html"
@@ -144,6 +166,25 @@ class RecipeDetailView(DetailView):
                 "recipeingredient_set__ingredient",
             )
         )
+
+class RecipeUpdateView(LoginRequiredMixin, UpdateView):
+    model = Recipe
+    form_class = RecipeUpdateForm
+    template_name = "recipes/recipe/recipe_update.html"
+
+    def get_queryset(self):
+        return Recipe.objects.filter(user=self.request.user)\
+
+    def get_success_url(self):
+        return reverse("recipe_detail", kwargs={"pk": self.object.pk})
+
+class RecipeDeleteView(LoginRequiredMixin, DeleteView):
+    model = Recipe
+    template_name = "recipes/confirm_delete_block.html"
+    success_url = reverse_lazy("recipe_list")
+
+    def get_queryset(self):
+        return Recipe.objects.filter(user=self.request.user)
 
 class UserRecipeListView(LoginRequiredMixin, ListView):
     model = Recipe

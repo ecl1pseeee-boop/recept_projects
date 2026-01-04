@@ -1,5 +1,13 @@
 {% extends "index.html" %}
-{% block title %}{{ recipe.title }}{% endblock %}
+
+{% block head %}
+    {% load static %}
+    <script defer src="{% static 'js/recipes/recipe_delete_modal.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ recipe.title }}
+{% endblock %}
 
 {% block content %}
     <div class="mx-auto max-w-6xl px-4 py-6">
@@ -37,6 +45,15 @@
                            href="{% url 'recipe_list' %}">
                           All recipes
                         </a>
+                        {% if recipe.user == user %}
+                            <button onclick="openDeleteModal()" class ="block rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900 text-red-600 hover:text-red-800">
+                                Delete recipe
+                            </button>
+                            <a class="block rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900" href="{% url 'recipe_update' recipe.pk %}">
+                                Edit recipe
+                            </a>
+                        {% endif %}
+                        {% include "recipes/confirm_delete_block.html" with recipe=recipe %}
                     </div>
                 </div>
             </div>
@@ -112,11 +129,12 @@
                           @click="$dispatch('open-share')">
                     Share
                   </button>
+                    <a class="rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900" href="#ingredients">
+                        Jump to ingredients
+                    </a>
 
-                  <a class="rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-900"
-                     href="#ingredients">
-                    Jump to ingredients
-                  </a>
+                    {% include "favorites/favorite_block.html" with recipe=recipe %}
+
                 </div>
               </div>
             </div>
@@ -213,3 +231,5 @@
         </div>
     </div>
 {% endblock %}
+
+

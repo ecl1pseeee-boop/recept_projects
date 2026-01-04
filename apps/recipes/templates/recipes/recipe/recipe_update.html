@@ -1,0 +1,126 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      Edit recipe
+    </h1>
+    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      Update your recipe details and save changes.
+    </p>
+  </div>
+
+  <div class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="rounded-lg border border-red-200 bg-red-50 text-red-800 p-3 text-sm">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <!-- Render fields one by one for better control -->
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+          Title
+        </label>
+        {{ form.title }}
+        {% if form.title.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ form.title.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+          Description
+        </label>
+        {{ form.description }}
+        {% if form.description.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ form.description.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+          Image URL
+        </label>
+        {{ form.image_url }}
+        {% if form.image_url.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ form.image_url.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+            Cooking time (min)
+          </label>
+          {{ form.cooking_time }}
+          {% if form.cooking_time.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.cooking_time.errors|striptags }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+            Prep time (min)
+          </label>
+          {{ form.prep_time }}
+          {% if form.prep_time.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.prep_time.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+            Servings
+          </label>
+          {{ form.servings }}
+          {% if form.servings.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.servings.errors|striptags }}</p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+            Difficulty
+          </label>
+          {{ form.difficulty }}
+          {% if form.difficulty.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.difficulty.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
+          Instructions
+        </label>
+        {{ form.instructions }}
+        {% if form.instructions.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ form.instructions.errors|striptags }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4">
+        <a href="{% url 'recipe_detail' object.pk %}"
+           class="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800
+                  text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-900">
+          Cancel
+        </a>
+
+        <button type="submit"
+                class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700">
+          Save changes
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
