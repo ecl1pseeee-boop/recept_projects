@@ -22,6 +22,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+
 # Django
 *.log
 local_settings.py
@@ -32,6 +33,8 @@ db.sqlite3-journal
 /static_root
 *.pot
 *.pyc
+**/migrations/*
+!**/migrations/__init__.py
 
 # Virtual Environments
 .venv
