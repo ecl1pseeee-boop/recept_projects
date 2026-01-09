@@ -1,0 +1,151 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto text-center px-4">
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+        Cook Smart with What You Have
+    </h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300 mb-10">
+        Enter your ingredients, and we’ll find the perfect recipes — even if you’re missing a few items.
+    </p>
+
+    <form method="post" action="" class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-10 max-w-2xl mx-auto">
+        {% csrf_token %}
+        <div class="flex flex-col sm:flex-row gap-3">
+            <input
+                type="text"
+                placeholder="e.g., tomatoes, eggs, basil..."
+                value="{{ request.POST.ingredients }}"
+                required
+                name="ingredients"
+                class="flex-grow px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700">
+                Find Recipes
+            </button>
+        </div>
+    </form>
+
+    {% for item in recipes %}
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden mb-8">
+
+        <!-- Recipe header -->
+        <div class="flex flex-col md:flex-row">
+            {% if item.recipe.image %}
+                <img
+                    src="{{ item.recipe.image.url }}"
+                    alt="{{ item.recipe.title }}"
+                    class="w-full md:w-56 h-56 object-cover"
+                >
+            {% elif item.recipe.image_url %}
+                <img
+                    src="{{ item.recipe.image_url }}"
+                    alt="{{ item.recipe.title }}"
+                    class="w-full md:w-56 h-56 object-cover"
+                >
+            {% else %}
+                <div class="w-full md:w-56 h-56 flex items-center justify-center text-gray-400">
+                    No image
+                </div>
+            {% endif %}
+
+            <div class="p-6 flex-1">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {{ item.recipe.title }}
+                </h2>
+
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {{ item.recipe.description|truncatewords:25 }}
+                </p>
+
+                <div class="flex flex-wrap gap-2 text-sm">
+                    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                        ⏱ {{ item.recipe.cooking_time }} min
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                        🍽 {{ item.recipe.servings }} servings
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+                        ⚙ {{ item.recipe.get_difficulty_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ingredients info -->
+        <div class="border-t border-gray-200 dark:border-gray-700 p-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+
+            <!-- Used -->
+            <div>
+                <h3 class="font-semibold text-green-600 dark:text-green-400 mb-2">
+                    ✅ Used ingredients
+                </h3>
+                <ul class="space-y-1 text-gray-700 dark:text-gray-300">
+                    {% for ing in item.used_ingredients %}
+                        <li>• {{ ing }}</li>
+                    {% empty %}
+                        <li class="text-gray-400">None</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Missing -->
+            <div>
+                <h3 class="font-semibold text-red-600 dark:text-red-400 mb-2">
+                    ❌ Missing ingredients
+                </h3>
+                <ul class="space-y-1 text-gray-700 dark:text-gray-300">
+                    {% for ing in item.missed_ingredients %}
+                        <li>• {{ ing }}</li>
+                    {% empty %}
+                        <li class="text-gray-400">Nothing missing 🎉</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Unused -->
+            <div>
+                <h3 class="font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                    ➖ Unused ingredients
+                </h3>
+                <ul class="space-y-1 text-gray-700 dark:text-gray-300">
+                    {% for ing in item.unused_ingredients %}
+                        <li>• {{ ing }}</li>
+                    {% empty %}
+                        <li class="text-gray-400">None</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="px-6 pb-6 flex justify-end">
+            <a
+                href="{% url 'recipe_detail' item.recipe.pk %}"
+                class="inline-flex items-center px-5 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+            >
+                View recipe →
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="text-indigo-600 dark:text-indigo-400 font-bold mb-2">Smart Matching</div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Get recipes that match your pantry — even with missing ingredients.</p>
+        </div>
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="text-green-600 dark:text-green-400 font-bold mb-2">Personalized</div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Save favorites and track your kitchen inventory.</p>
+        </div>
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="text-amber-600 dark:text-amber-400 font-bold mb-2">Quick & Easy</div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Find dinner in seconds — no more recipe scrolling.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

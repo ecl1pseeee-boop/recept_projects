@@ -144,3 +144,9 @@ class RecipeUpdateForm(forms.ModelForm):
             "difficulty": forms.Select(attrs={"class": "w-full p-2 border rounded-lg"}),
             "instructions": forms.Textarea(attrs={"rows": 6, "class": "w-full p-2 border rounded-lg"}),
         }
+
+
+class IngredientSearchForm(forms.Form):
+    ingredients = forms.CharField(
+        help_text="Enter a comma separated list of ingredients.",
+    )

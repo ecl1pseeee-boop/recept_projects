@@ -1,18 +1,25 @@
+import os
 from datetime import timedelta
+
+import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 from django.db.models import Q
-from .forms import RecipeForm, RecipeFilterForm, RecipeUpdateForm, RecipeIngredientFormSet
+from .forms import RecipeForm, RecipeFilterForm, RecipeUpdateForm, RecipeIngredientFormSet, IngredientSearchForm
 from .models import Recipe, Category
+from .services.import_by_ingredients import get_recipes_by_ingredients
 
+API_KEY = os.getenv("API_KEY")
+SPOONACULAR_URL = os.getenv("SPOONACULAR_URL")
+COUNTER = 5
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     form_class = RecipeForm
-    template_name = "recipes/recipe/recipe_create.html"
+    template_name = "recipes/recipe/templates/recipes/actions/recipe_creating.html"
     success_url = reverse_lazy("recipe_list")
 
     def form_valid(self, form):
@@ -49,8 +56,8 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 class RecipeListView(ListView):
     model = Recipe
     context_object_name = "recipes"
-    template_name = "recipes/recipes_block_content.html"
-    partial_template_name = "recipes/recipes_page.html"
+    template_name = "recipes/recipes_list_page.html"
+    partial_template_name = "recipes/recipe_list.html"
 
     def get_filter_form(self) -> RecipeFilterForm:
         return RecipeFilterForm(self.request.GET)
@@ -170,7 +177,7 @@ class RecipeDetailView(DetailView):
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = RecipeUpdateForm
-    template_name = "recipes/recipe/recipe_update.html"
+    template_name = "recipes/recipe/templates/recipes/actions/recipe_updating.html"
 
     def get_queryset(self):
         return Recipe.objects.filter(user=self.request.user)\
@@ -180,7 +187,7 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
 
 class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     model = Recipe
-    template_name = "recipes/confirm_delete_block.html"
+    template_name = "recipes/actions/delete_confirmation.html"
     success_url = reverse_lazy("recipe_list")
 
     def get_queryset(self):
@@ -196,4 +203,16 @@ class UserRecipeListView(LoginRequiredMixin, ListView):
               .get_queryset()
               .select_related("user")
               .filter(user=self.request.user))
+
+
+class RecipeIngredientSearchView(FormView):
+    template_name = "recipes/home/main_block.html"
+    form_class = IngredientSearchForm
+
+    def form_valid(self, form):
+        ingredients = form.cleaned_data["ingredients"]
+        cleaned_ingredients = ",".join(i.strip() for i in ingredients.split(",") if i.strip())
+        api_data = get_recipes_by_ingredients(cleaned_ingredients)
+        context = self.get_context_data(form=form, ingredients=cleaned_ingredients, recipes=api_data)
+        return self.render_to_response(context)
 

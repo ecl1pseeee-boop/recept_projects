@@ -25,7 +25,6 @@ from apps.users import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', TemplateView.as_view(template_name="main_block.html"), name="home"),
     path('', include('apps.users.urls')),
     path('', include('apps.recipes.urls')),
     path('', include('apps.favorites.urls')),
