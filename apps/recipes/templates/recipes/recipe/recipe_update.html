@@ -13,7 +13,7 @@
   </div>
 
   <div class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-    <form method="post" class="space-y-5">
+    <form method="post" class="space-y-5" enctype="multipart/form-data">
       {% csrf_token %}
 
       {% if form.non_field_errors %}
@@ -45,11 +45,11 @@
 
       <div>
         <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1">
-          Image URL
+          Image
         </label>
-        {{ form.image_url }}
-        {% if form.image_url.errors %}
-          <p class="mt-1 text-sm text-red-600">{{ form.image_url.errors|striptags }}</p>
+        {{ form.image }}
+        {% if form.image.errors %}
+          <p class="mt-1 text-sm text-red-600">{{ form.image.errors|striptags }}</p>
         {% endif %}
       </div>
 

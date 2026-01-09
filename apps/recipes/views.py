@@ -86,7 +86,7 @@ class RecipeListView(ListView):
 
         has_image = cd["has_image"]
         if has_image:
-            qs = qs.filter(image_url__isnull=False).exclude(image_url="")
+            qs = qs.filter(Q(image_url__isnull=False) | (Q(image_isnull=False) & ~Q(image_url="")))
 
         freshness = cd["freshness"]
         if freshness:

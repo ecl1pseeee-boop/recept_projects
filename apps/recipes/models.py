@@ -26,6 +26,7 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100, verbose_name="Title")
     description = models.TextField(blank=True, null=True, verbose_name="Recipe Description")
     image_url = models.URLField(max_length=500, blank=True, null=True, verbose_name="Image URL")
+    image = models.ImageField(upload_to="images/", blank=True, null=True, verbose_name="Uploaded Image")
     cooking_time = models.PositiveIntegerField(help_text="Cooking time in minutes", verbose_name="Cooking time")
     prep_time = models.PositiveIntegerField(blank=True, null=True, verbose_name="Preparation time in minutes")
     servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Servings")

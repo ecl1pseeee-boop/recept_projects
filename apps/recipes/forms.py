@@ -5,7 +5,6 @@ from .models import Recipe, Category, RecipeCategory, RecipeIngredient
 
 
 class RecipeForm(forms.ModelForm):
-    image_url = forms.URLField(required=False)
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
         required=False,
@@ -16,13 +15,13 @@ class RecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ["title", "description", "image_url",
+        fields = ["title", "description", "image",
                   "cooking_time", "prep_time", "servings",
                   "difficulty", "instructions"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "w-full p-2 border rounded-lg"}),
             "description": forms.Textarea(attrs={"rows": 3, "class": "w-full p-2 border rounded-lg"}),
-            "image_url": forms.URLInput(attrs={"class": "w-full p-2 border rounded-lg", "placeholder": "https://..."}),
+            "image": forms.ClearableFileInput(attrs={"class": "w-full p-2 border rounded-lg"}),
             "cooking_time": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),
             "prep_time": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),
             "servings": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),
@@ -132,12 +131,13 @@ class RecipeFilterForm(forms.Form):
 class RecipeUpdateForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ["title", "description", "image_url", "cooking_time", "prep_time", "servings", "difficulty",
+        fields = ["title", "description", "image", "cooking_time", "prep_time", "servings", "difficulty",
                   "instructions"]
+        exclude = ["image_url"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "w-full p-2 border rounded-lg"}),
             "description": forms.Textarea(attrs={"rows": 3, "class": "w-full p-2 border rounded-lg"}),
-            "image_url": forms.URLInput(attrs={"class": "w-full p-2 border rounded-lg", "placeholder": "https://..."}),
+            "image": forms.ClearableFileInput(attrs={"class": "w-full p-2 border rounded-lg"}),
             "cooking_time": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),
             "prep_time": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),
             "servings": forms.NumberInput(attrs={"min": 0, "class": "w-full p-2 border rounded-lg"}),

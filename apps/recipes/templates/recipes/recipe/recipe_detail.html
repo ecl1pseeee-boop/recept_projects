@@ -63,15 +63,20 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
               <!-- Image -->
               <div class="bg-gray-100 dark:bg-gray-900">
-                {% if recipe.image_url %}
-                  <img src="{{ recipe.image_url }}"
-                       alt="{{ recipe.title }}"
-                       class="h-full w-full object-cover"
-                       loading="lazy">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}"
+                         alt="{{ recipe.title }}"
+                         class="h-full w-full object-cover"
+                         loading="lazy">
+                {% elif recipe.image_url %}
+                     <img src="{{ recipe.image_url }}"
+                          alt="{{ recipe.title }}"
+                          class="h-full w-full object-cover"
+                          loading="lazy">
                 {% else %}
-                  <div class="h-72 md:h-full flex items-center justify-center text-gray-500">
-                    No photo
-                  </div>
+                    <div class="h-72 md:h-full flex items-center justify-center text-gray-500">
+                        No photo
+                    </div>
                 {% endif %}
               </div>
 
