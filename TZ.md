@@ -8,7 +8,7 @@
 ## 2. Технологический стек
 
 - **Backend:** Django (Python)
-- **Frontend:** HTML templates, Tailwind CSS, HTMX/Alpine
+- **Frontend:** HTML templates, Tailwind CSS
 - **База данных:** SQLite (dev) / MYSQL (prod)
 - **Хранение изображений:** Django `MEDIA` (ImageField) + поддержка `image_url` (для API)
 
@@ -219,37 +219,7 @@
 
 ---
 
-## 7. Инфраструктура
-
-### 7.1 Docker
-
-**Контейнеры:**
-
-* Django Application
-* MySQL
-* Nginx
-
-**docker-compose.yml включает:**
-
-* Volumes
-* Networking
-* Environment variables
-* Port mapping
-
----
-
-### 7.2 Nginx
-
-* Раздача статических файлов
-* Раздача медиа файлов
-* Reverse Proxy к Django
-* Gzip сжатие
-* Security Headers
-* Подготовка к SSL/TLS
-
----
-
-## 8. Конфигурация окружения
+## 7. Конфигурация окружения
 
 ### Переменные окружения:
 
@@ -261,7 +231,7 @@
 
 
 
-## 9. Нефункциональные требования
+## 8. Нефункциональные требования
 
 - Код разделён по приложениям (`recipes`, `ingredients`, `favorites`, `users`)
 - Внешняя интеграция вынесена в сервис/импортёр (не в шаблоны)
@@ -269,7 +239,7 @@
 
 ---
 
-## 10. Структура проекта
+## 9. Структура проекта
 
 - `apps/recipes` — рецепты, поиск, импорт, CRUD, шаблоны рецептов
 - `apps/favorites` — избранное
