@@ -30,7 +30,7 @@ class Recipe(models.Model):
     cooking_time = models.PositiveIntegerField(help_text="Cooking time in minutes", verbose_name="Cooking time")
     prep_time = models.PositiveIntegerField(blank=True, null=True, verbose_name="Preparation time in minutes")
     servings = models.PositiveIntegerField(blank=True, null=True, verbose_name="Servings")
-    difficulty = models.CharField(null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Difficulty level")
+    difficulty = models.CharField(max_length = 15, null=True, blank=True, choices=DIFFICULTY_VALUES, verbose_name="Difficulty level")
     instructions = models.TextField(blank=True, null=True, verbose_name="Instructions")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Recipe Autor", null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now, verbose_name="Creation time")

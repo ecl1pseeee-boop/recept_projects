@@ -19,7 +19,7 @@ COUNTER = 5
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     form_class = RecipeForm
-    template_name = "recipes/recipe/templates/recipes/actions/recipe_creating.html"
+    template_name = "recipes/actions/recipe_creating.html"
     success_url = reverse_lazy("recipe_list")
 
     def form_valid(self, form):
@@ -93,7 +93,7 @@ class RecipeListView(ListView):
 
         has_image = cd["has_image"]
         if has_image:
-            qs = qs.filter(Q(image_url__isnull=False) | (Q(image_isnull=False) & ~Q(image_url="")))
+            qs = qs.filter(Q(image_url__isnull=False) | (Q(image__isnull=False) & ~Q(image_url="")))
 
         freshness = cd["freshness"]
         if freshness:
@@ -177,7 +177,7 @@ class RecipeDetailView(DetailView):
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     model = Recipe
     form_class = RecipeUpdateForm
-    template_name = "recipes/recipe/templates/recipes/actions/recipe_updating.html"
+    template_name = "recipes/actions/recipe_updating.html"
 
     def get_queryset(self):
         return Recipe.objects.filter(user=self.request.user)\

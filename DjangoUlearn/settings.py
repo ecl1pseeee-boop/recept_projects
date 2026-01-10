@@ -19,6 +19,11 @@ from apps import users
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+if os.getenv("DJANGO_ENV") != "production":
+    load_dotenv(BASE_DIR / ".env")
+
+
+
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 load_dotenv()
@@ -28,7 +33,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '80.87.103.221', 'vm-bc15cb10.na4u.ru']
 
@@ -81,7 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "DjangoUlearn.wsgi.application"
 
-
+# FOR LOCAL DEVELOPMENT
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -92,6 +97,7 @@ DATABASES = {
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# FOR PRODUCTION
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "mysql.connector.django",
@@ -180,7 +186,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = "/app/media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
